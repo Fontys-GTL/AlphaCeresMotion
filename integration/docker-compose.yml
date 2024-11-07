@@ -8,17 +8,3 @@ services:
     image: registry.gitlab.com/roxautomation/images/mosquitto:latest
     ports:
       - "1883:1883"
-
-  # monitor (logitech) gamepad and post mqtt messages
-  gamepad:
-    restart: unless-stopped
-    container_name: gamepad
-    image: registry.gitlab.com/roxautomation/components/gamepad
-    network_mode: "host"
-    privileged: true
-    environment:
-      - LOG_LEVEL=info
-      - MQTT_HOST=localhost
-    volumes:
-      - /dev/input:/dev/input
-      - /dev/bus/usb:/dev/bus/usb
