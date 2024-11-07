@@ -36,7 +36,7 @@ optional-dependencies = {dev = { file = ["requirements-dev.txt"] }}
 Homepage = "https://gitlab.com/path to project, consisting of username and project name (eq. username)/alpha_motion"
 
 [project.scripts]
-alpha_motion = "alpha_motion.cli:cli"
+motion = "alpha_motion.cli:cli"
 
 
 [tool.setuptools_scm]
