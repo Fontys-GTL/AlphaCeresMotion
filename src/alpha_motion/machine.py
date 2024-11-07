@@ -18,6 +18,7 @@ from roxbot.models.diff_drive import DiffDriveModel
 
 from alpha_motion.config import MachineConfig, MqttTopics
 from alpha_motion.utils import Timer
+from alpha_motion.drives import Drive
 
 
 CFG = MachineConfig()
@@ -34,15 +35,37 @@ class Machine(Node):
 
         self.model = DiffDriveModel(CFG.B, CFG.wheel_diameter, CFG.wheel_accel)
 
+        self.left_wheel = Drive(CFG.wheel_ids[0], "left_wheel", CFG.wheel_dirs[0])
+        self.right_wheel = Drive(CFG.wheel_ids[1], "right_wheel", CFG.wheel_dirs[1])
+
+        self.drives = [self.left_wheel, self.right_wheel]
+
         self._coros.append(self._update_model_loop)
         self._coros.append(self._status_loop)
         self._coros.append(self._send_setpoints)
+        self._coros.append(self.check_drives_alive)
         self._coros.append(self._on_init)
 
     async def _on_init(self) -> None:
         """initialize machine"""
         self._log.info("Initializing machine")
         await self.mqtt.register_callback(TOPICS.cmd_vc, self._cmd_callback)
+
+        for drv in self.drives:
+            await drv.start()
+            await drv.init()
+
+    async def check_drives_alive(self) -> None:
+        """check if drives are alive, raise exception if not"""
+
+        # TODO: refactor Node to have on_init coroutine.
+        await asyncio.sleep(3)  # wait for drives to start
+
+        while True:
+            for drv in self.drives:
+                drv.odrv.check_alive()  # will raise exception if not alive
+                drv.odrv.check_errors()  # will raise exception if errors
+            await asyncio.sleep(1)
 
     def _cmd_callback(self, msg: list | dict) -> None:
         """callback for motion commands"""
@@ -83,7 +106,7 @@ class Machine(Node):
 
             await asyncio.sleep(1 / freq)
 
-    async def _send_setpoints(self, freq: float = 10) -> None:
+    async def _send_setpoints(self, freq: float = 10.0) -> None:
         """send setpoints to drives"""
 
         wheel_circumference = CFG.wheel_diameter * 3.14159
@@ -94,16 +117,20 @@ class Machine(Node):
             vr_rps = self.model.vr / wheel_circumference
 
             self._log.debug(f"vl={vl_rps:.2f}, vr={vr_rps:.2f}")
+
+            self.left_wheel.set_velocity_rps(vl_rps)
+            self.right_wheel.set_velocity_rps(vr_rps)
+
             await asyncio.sleep(delay)
 
 
 async def main() -> None:
-    m = Machine()
+    machine = Machine()
 
-    await m.main()
+    await machine.main()
 
 
 if __name__ == "__main__":
     from alpha_motion.runners import run_main
 
-    run_main(main())
+    run_main(main(), trace_on_exc=True)
