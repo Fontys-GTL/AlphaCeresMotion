@@ -42,10 +42,10 @@ class Machine(Node):
     async def _update_model_loop(self, freq: float = 100) -> None:
         """update setpoints for driving and steering wheels"""
 
+        self._log.info("Starting model update loop")
         last_update = time.time()
 
         while True:
-            print(".", end="", flush=True)
             dt = time.time() - last_update
             self.model.step(dt)
             last_update = time.time()
@@ -57,10 +57,7 @@ class Machine(Node):
             await asyncio.sleep(1 / freq)
 
 
-# ---------------- test functions ----------------
-
-
-async def test_machine() -> None:
+async def main() -> None:
     m = Machine()
 
     await m.main()
@@ -69,4 +66,4 @@ async def test_machine() -> None:
 if __name__ == "__main__":
     from alpha_motion.runners import run_main
 
-    run_main(test_machine())
+    run_main(main())
