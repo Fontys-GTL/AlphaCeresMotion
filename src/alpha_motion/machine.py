@@ -36,6 +36,7 @@ class Machine(Node):
 
         self._coros.append(self._update_model_loop)
         self._coros.append(self._status_loop)
+        self._coros.append(self._send_setpoints)
         self._coros.append(self._on_init)
 
     async def _on_init(self) -> None:
@@ -49,7 +50,10 @@ class Machine(Node):
 
         try:
             assert isinstance(msg, dict)
-            self.cmd_curvature(**msg)
+            v_linear = msg["v_linear"]
+            curvature = msg["curvature"]
+            self.model.cmd_curvature(v_linear, curvature)
+
             self._cmd_timer.reset()
         except Exception as e:
             self._log.error(f"Invalid message {msg}: {e}")
@@ -61,10 +65,6 @@ class Machine(Node):
             await self.mqtt.publish(TOPICS.status, f"Heartbeat {counter}")
             counter += 1
             await asyncio.sleep(1)
-
-    def cmd_curvature(self, v_linear: float, curvature: float) -> None:
-        """set velocity and curvature"""
-        self.model.cmd_curvature(v_linear, curvature)
 
     async def _update_model_loop(self, freq: float = 100) -> None:
         """update setpoints for driving and steering wheels"""
@@ -82,6 +82,19 @@ class Machine(Node):
                 self.model.cmd_lr(0, 0)
 
             await asyncio.sleep(1 / freq)
+
+    async def _send_setpoints(self, freq: float = 10) -> None:
+        """send setpoints to drives"""
+
+        wheel_circumference = CFG.wheel_diameter * 3.14159
+        delay = 1 / freq
+
+        while True:
+            vl_rps = self.model.vl / wheel_circumference
+            vr_rps = self.model.vr / wheel_circumference
+
+            self._log.debug(f"vl={vl_rps:.2f}, vr={vr_rps:.2f}")
+            await asyncio.sleep(delay)
 
 
 async def main() -> None:
