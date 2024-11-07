@@ -2,7 +2,12 @@
 
 
 
-Motion container for Alpha Ceres machine
+Motion container for Alpha Ceres machine.
+
+
+## Class diagram
+
+![](docs/uml/classes.png)
 
 
 
@@ -10,7 +15,7 @@ Motion container for Alpha Ceres machine
 
 
 1. develop and test in devcontainer (VSCode)
-2. trigger ci builds by bumping version with a tag. (see `.gitlab-ci.yml`)
+2. run ci on **host** with `invoke ci`
 
 ## Tooling
 
