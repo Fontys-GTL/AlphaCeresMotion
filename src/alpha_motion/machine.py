@@ -16,11 +16,12 @@ import time
 from roxbot import Node
 from roxbot.models.diff_drive import DiffDriveModel
 
-from alpha_motion.config import MachineConfig
+from alpha_motion.config import MachineConfig, MqttTopics
 from alpha_motion.utils import Timer
 
 
 CFG = MachineConfig()
+TOPICS = MqttTopics()
 
 
 class Machine(Node):
@@ -34,6 +35,25 @@ class Machine(Node):
         self.model = DiffDriveModel(CFG.B, CFG.wheel_diameter, CFG.wheel_accel)
 
         self._coros.append(self._update_model_loop)
+        self._coros.append(self._status_loop)
+        self._coros.append(self._on_init)
+
+    async def _on_init(self) -> None:
+        """initialize machine"""
+        self._log.info("Initializing machine")
+        await self.mqtt.register_callback(TOPICS.cmd_vc, self._cmd_callback)
+
+    def _cmd_callback(self, msg: list | dict) -> None:
+        """callback for motion commands"""
+        self._log.debug(f"cmd callback {msg}")
+
+    async def _status_loop(self) -> None:
+        counter = 0
+
+        while True:
+            await self.mqtt.publish(TOPICS.status, f"Heartbeat {counter}")
+            counter += 1
+            await asyncio.sleep(1)
 
     def cmd_curvature(self, v_linear: float, curvature: float) -> None:
         """set velocity and curvature"""
