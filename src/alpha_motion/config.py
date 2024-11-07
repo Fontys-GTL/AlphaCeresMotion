@@ -26,8 +26,6 @@ class MachineConfig(BaseSettings):
 
     mock_drives: bool = CI  # use mock hardware for testing, true in CI
 
-    setpoint_freq: int = 10  # drive setpoint frequency in Hz
-
     cmd_timeout: float = 0.5  # command timeout in seconds
 
     # model parameters
