@@ -1,7 +1,7 @@
 {
-  //"initializeCommand": "${localWorkspaceFolder}/init_host.sh", // executed on HOST system
+  "initializeCommand": "mkdir -p /var/tmp/container-extensions", // executed on HOST system
   "postCreateCommand": "./init_container.sh",
-  "image": "sjev/python-dev",
+  "image": "roxauto/python-dev",
 
   "mounts": [
     "source=/var/tmp/container-extensions,target=/home/dev/.vscode-server/extensions,type=bind,consistency=cached"
