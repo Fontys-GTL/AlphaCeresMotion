@@ -25,7 +25,8 @@ Motion container for Alpha Ceres machine
 
 ## How to run integration
 To do some integration testing, this container depends on a MQTT broker. We can run this by `docker compose up` in the integration folder. This will start a mosquitto container that acts as an MQTT broker. This has to be run on the host system.
-
+##How to run integration
+To do some integration testing, this container depends on a MQTT broker. We can run this by `docker compose up` in the integration folder. This will start a mosquitto container that acts as an MQTT broker. This has to be run on the host system.
 The machine can be tested with motion_tester. It will publish with a velocity of 0.5 and a varying curvature between -1 and 1.
 You can visualise the sent MQTT messages with `mosquitto_sub -t /# -v`. This will print all published MQTT messages.
 
