@@ -1,0 +1,18 @@
+{
+  "template": "https://gitlab.com/roxautomation/templates/python-package",
+  "commit": "6a799e12e8a4ede5ad6454ed88996114462ddfec",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "author_name": "ROX Automation",
+      "author_email": "jev.kuznetsov@gmail.com",
+      "gitlab_path": "path to project, consisting of username and project name (eq. username)",
+      "project_name": "AlphaCeresMotion",
+      "project_slug": "alpha_motion",
+      "package_name": "alpha_motion",
+      "project_short_description": "Motion container for Alpha Ceres machine",
+      "_template": "https://gitlab.com/roxautomation/templates/python-package"
+    }
+  },
+  "directory": null
+}
