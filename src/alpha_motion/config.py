@@ -33,3 +33,10 @@ class MachineConfig(BaseSettings):
     # model parameters
     wheel_diameter: float = 0.32  # wheel diameter in meters
     wheel_accel: float = 1.0  # wheel axle acceleration in m/s^2
+
+
+class MqttTopics(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="topic_")
+
+    cmd_vc: str = "/motion/cmd_vc"
+    status: str = "/motion/status"
