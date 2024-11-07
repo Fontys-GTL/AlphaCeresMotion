@@ -123,3 +123,5 @@ def build_image(ctx):
 
     # Clean up the copied dist folder
     shutil.rmtree("docker/dist")
+
+    print(f"Built Docker image {img}")
