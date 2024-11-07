@@ -4,4 +4,4 @@ COPY dist /dist
 RUN pip install /dist/*.whl
 
 # Command to run the server
-CMD ["python", "-m", "beta_main"]
+CMD ["python", "-m", "alpha_motion"]
