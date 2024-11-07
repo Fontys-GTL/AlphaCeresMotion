@@ -25,3 +25,5 @@ class MachineConfig(BaseSettings):
     can_channel: str = "vcan0"  # can channel name
 
     mock_drives: bool = CI  # use mock hardware for testing, true in CI
+
+    setpoint_freq: int = 10  # drive setpoint frequency in Hz
