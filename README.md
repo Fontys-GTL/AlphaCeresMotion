@@ -23,6 +23,6 @@ Motion container for Alpha Ceres machine
 * `src/alpha_motion` app code. `pip install .` .
 * `tasks.py` automation tasks.
 
-##How to run integration
+## How to run integration
 To do some integration testing, this container depends on a MQTT broker. We can run this by `docker compose up` in the integration folder. This will start a mosquitto container that acts as an MQTT broker. This has to be run on the host system.
 
