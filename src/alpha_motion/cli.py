@@ -43,5 +43,13 @@ def mock_drives() -> None:
     run_main(mock_drives())
 
 
+@run.command()
+def machine() -> None:
+    """Run machine"""
+    from alpha_motion.machine import main
+
+    run_main(main())
+
+
 if __name__ == "__main__":
     cli()  # pragma: no cover

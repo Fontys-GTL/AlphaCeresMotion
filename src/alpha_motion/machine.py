@@ -47,6 +47,13 @@ class Machine(Node):
         """callback for motion commands"""
         self._log.debug(f"cmd callback {msg}")
 
+        try:
+            assert isinstance(msg, dict)
+            self.cmd_curvature(**msg)
+            self._cmd_timer.reset()
+        except Exception as e:
+            self._log.error(f"Invalid message {msg}: {e}")
+
     async def _status_loop(self) -> None:
         counter = 0
 
