@@ -6,7 +6,7 @@
   "mounts": [
     "source=/var/tmp/container-extensions,target=/home/dev/.vscode-server/extensions,type=bind,consistency=cached"
   ],
-
+  "runArgs": ["--network=host"],
 
   // Features to add to the dev container. More info: https://containers.dev/implementors/features.
   // "features": {},
