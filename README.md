@@ -46,3 +46,10 @@ Motion container for Alpha Ceres machine.
 ## Showing debug output
 
 * set env variable `export LOGLEVEL=debug`
+
+
+## Building docker image
+
+Build docker image on target system with
+
+`invoke build-image`

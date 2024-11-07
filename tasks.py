@@ -1,9 +1,21 @@
 # type: ignore
 import os
+import re
 import time
+from pathlib import Path
+import shutil
+
 from click import prompt
 from invoke import task
 
+
+def get_version_from_dist():
+    dist_files = os.listdir("dist")
+    for filename in dist_files:
+        match = re.match(r"beta_main-(\d+\.\d+\.\d+(\.dev\d+)?)", filename)
+        if match:
+            return match.group(1)
+    raise ValueError("Version not found in dist folder")
 
 
 @task
@@ -42,7 +54,6 @@ def test(ctx):
     ctx.run("pytest --cov=src --cov-report term-missing tests")
 
 
-
 @task
 def uml(ctx):
     """
@@ -68,7 +79,6 @@ def ci(ctx):
         print(f"CI run took {t_end - t_start:.1f} seconds")
 
 
-
 @task
 def build_package(ctx):
     """
@@ -89,14 +99,27 @@ def build_package(ctx):
 
 
 @task
-def release(ctx):
-    """publish package to pypi"""
-    script_dir = os.path.dirname(os.path.realpath(__file__))
+def build_image(ctx):
+    """build docker image locally. run on host machine"""
+    # Set the Docker image name
+    img = "local/alpha-motion:latest"
 
-    token = os.getenv("PYPI_TOKEN")
-    if not token:
-        raise ValueError("PYPI_TOKEN environment variable is not set")
+    # Print message for building Docker image
+    print(f"Building Docker image {img}")
 
-    ctx.run(
-        f"docker run --rm -e PYPI_TOKEN={token} -v {script_dir}:/workspace roxauto/python-ci /scripts/publish.sh"
-    )
+    pkg_path = Path("dist")
+    if not pkg_path.exists():
+        print("No dist directory found, building package first")
+        build_package(ctx)
+
+    tmp_pkg_path = Path("docker/dist")
+    if tmp_pkg_path.exists():
+        shutil.rmtree(tmp_pkg_path)
+
+    shutil.copytree("dist", "docker/dist")
+
+    # Build the Docker image
+    ctx.run(f"docker build --no-cache -t {img} docker")
+
+    # Clean up the copied dist folder
+    shutil.rmtree("docker/dist")
