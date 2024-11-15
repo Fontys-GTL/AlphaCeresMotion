@@ -18,12 +18,12 @@ classifiers = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
 
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 
 
 [tool.setuptools.dynamic]
@@ -52,7 +52,8 @@ ignore_missing_imports = true
 
 #-----------------pytest configuration----------------
 [tool.pytest.ini_options]
-filterwarnings = "ignore::DeprecationWarning:dateutil.*"
+asyncio_default_fixture_loop_scope = "function"
+#filterwarnings = "ignore::DeprecationWarning:dateutil.*"
 
 log_cli = false
 log_cli_level = "DEBUG"
