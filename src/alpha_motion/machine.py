@@ -57,7 +57,6 @@ class Machine(Node):
     async def check_drives_alive(self) -> None:
         """check if drives are alive, raise exception if not"""
 
-        # TODO: refactor Node to have on_init coroutine.
         await asyncio.sleep(3)  # wait for drives to start
 
         while True:
