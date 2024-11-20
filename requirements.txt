@@ -1,6 +1,6 @@
 aiomqtt
 click
-odrive-can<1.0.0
+odrive-can>=1.2.0
 orjson
 pydantic
 pydantic-settings

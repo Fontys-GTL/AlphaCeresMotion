@@ -2,6 +2,9 @@
   "initializeCommand": "mkdir -p .devcontainer/extensions", // executed on HOST
   "image": "roxauto/python-dev",
 
+  "runArgs": [
+    "--network=host"
+  ],
 
   "postCreateCommand": ".devcontainer/init_container.sh",
 
@@ -10,9 +13,9 @@
   ],
 
   "containerEnv": {
-    "PYTHONPATH": "${containerWorkspaceFolder}/lib",
-    "CAN_CHANNEL": "224.0.0.1",
-    "CAN_INTERFACE": "udp_multicast"
+    // "PYTHONPATH": "${containerWorkspaceFolder}/lib",
+    "CAN_CHANNEL": "vcan0",
+    "CAN_INTERFACE": "socketcan"
   },
 
   // Features to add to the dev container. More info: https://containers.dev/implementors/features.

@@ -22,8 +22,6 @@ class MachineConfig(BaseSettings):
     wheel_ids: Tuple[int, int] = (1, 2)  # odrive axis ids
     wheel_dirs: Tuple[int, int] = (1, -1)  # wheel direction
 
-    can_channel: str = "vcan0"  # can channel name
-
     mock_drives: bool = CI  # use mock hardware for testing, true in CI
 
     cmd_timeout: float = 0.5  # command timeout in seconds

@@ -48,7 +48,7 @@ def machine() -> None:
     """Run machine"""
     from alpha_motion.machine import main
 
-    run_main(main())
+    run_main(main(), trace_on_exc=True)
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ class Drive:
         self.log = logging.getLogger(name)
 
         self.name = name
-        self.odrv: ODriveCAN = ODriveCAN(axis_id=axis_id, interface=CFG.can_channel)
+        self.odrv: ODriveCAN = ODriveCAN(axis_id=axis_id)
 
         self.direction = direction
         self.odrv.set_controller_mode("VELOCITY_CONTROL", "VEL_RAMP")
@@ -101,9 +101,9 @@ async def mock_drives() -> None:
     """create mock drives"""
 
     # create mocks
-    left_wheel = ODriveCANMock(axis_id=CFG.wheel_ids[0], channel=CFG.can_channel)
+    left_wheel = ODriveCANMock(axis_id=CFG.wheel_ids[0])
     left_wheel.odrive.control_mode = "VELOCITY_CONTROL"
-    right_wheel = ODriveCANMock(axis_id=CFG.wheel_ids[1], channel=CFG.can_channel)
+    right_wheel = ODriveCANMock(axis_id=CFG.wheel_ids[1])
     right_wheel.odrive.control_mode = "VELOCITY_CONTROL"
 
     async with asyncio.TaskGroup() as tg:
