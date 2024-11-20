@@ -145,6 +145,8 @@ class Machine(Node):
 
             self._log.debug(f"vl={vl_rps:.2f}, vr={vr_rps:.2f}")
 
+            udp_client.send({"setpoints": {"vl": vl_rps, "vr": vr_rps}})
+
             self.left_wheel.set_velocity_rps(vl_rps)
             self.right_wheel.set_velocity_rps(vr_rps)
 
