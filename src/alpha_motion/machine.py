@@ -136,6 +136,8 @@ class Machine(Node):
                     timeout_warned = True
                 self.model.cmd_lr(0, 0)
             else:
+                if timeout_warned:
+                    self._log.info("Setpoints resumed.")
                 timeout_warned = False
 
             await asyncio.sleep(1 / freq)
