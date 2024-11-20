@@ -44,7 +44,6 @@ class Machine(Node):
         self._coros.append(self._status_loop)
         self._coros.append(self._send_setpoints)
         self._coros.append(self.check_drives_alive)
-        self._coros.append(self._on_init)
 
     async def _on_init(self) -> None:
         """initialize machine"""
