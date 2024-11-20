@@ -23,14 +23,14 @@ class MotionTester(Node):
 
     async def _send_test_cmds(self) -> None:
         v_linear = 0.5
-        curvature = -1.0
+
         while True:
-            msg = {"v_linear": v_linear, "curvature": curvature}
-            await self.mqtt.publish(TOPICS.cmd_vc, msg)
-            await asyncio.sleep(1)
-            curvature += 0.1
-            if curvature > 1.0:
-                curvature = -1.0
+            for curvature in [-1.0, 0.0, 1.0]:
+
+                msg = {"v_linear": v_linear, "curvature": curvature}
+                self._log.info(f"Sending {msg}")
+                await self.mqtt.publish(TOPICS.cmd_vc, msg)
+                await asyncio.sleep(10)
 
 
 if __name__ == "__main__":
