@@ -1,12 +1,19 @@
 {
-  "initializeCommand": "mkdir -p /var/tmp/container-extensions", // executed on HOST system
-  "postCreateCommand": "./init_container.sh",
+  "initializeCommand": "mkdir -p .devcontainer/extensions", // executed on HOST
   "image": "roxauto/python-dev",
 
+
+  "postCreateCommand": ".devcontainer/init_container.sh",
+
   "mounts": [
-    "source=/var/tmp/container-extensions,target=/home/dev/.vscode-server/extensions,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder}/.devcontainer/extensions,target=/home/dev/.vscode-server/extensions,type=bind,consistency=cached"
   ],
-  "runArgs": ["--network=host"],
+
+  "containerEnv": {
+    "PYTHONPATH": "${containerWorkspaceFolder}/lib",
+    "CAN_CHANNEL": "224.0.0.1",
+    "CAN_INTERFACE": "udp_multicast"
+  },
 
   // Features to add to the dev container. More info: https://containers.dev/implementors/features.
   // "features": {},
@@ -22,18 +29,17 @@
         "ms-python.python",
         "ms-python.vscode-pylance",
         "shardulm94.trailing-spaces",
-        "njpwerner.autodocstring",
         "mhutchie.git-graph",
         "doi.fileheadercomment",
         "donjayamanne.githistory",
-        "charliermarsh.ruff"
-      ],
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash"
-      }
+        "ms-python.mypy-type-checker",
+        "tamasfe.even-better-toml",
+        "GitHub.copilot",
+        "ms-python.pylint",
+        "ms-python.black-formatter",
+        "ms-python.isort"
+      ]
     }
   }
 
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
 }

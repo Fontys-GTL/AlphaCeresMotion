@@ -1,6 +1,6 @@
 {
   "template": "https://gitlab.com/roxautomation/templates/python-package",
-  "commit": "6a799e12e8a4ede5ad6454ed88996114462ddfec",
+  "commit": "e1ab78f33cb5d7e308c56b500fb4abc9d61a1801",
   "checkout": null,
   "context": {
     "cookiecutter": {

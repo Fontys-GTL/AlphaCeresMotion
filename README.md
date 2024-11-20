@@ -21,7 +21,8 @@ Motion container for Alpha Ceres machine.
 
 * Automation: `invoke` - run `invoke -l` to list available commands. (uses `tasks.py`)
 * Verisoning : `setuptools_scm`
-* Linting and formatting : `ruff`
+* Linting : `pylint`
+* Formatting: `black`
 * Typechecking: `mypy`
 
 ## What goes where
