@@ -57,6 +57,9 @@ def run_main(func, trace_on_exc=False):  # type: ignore
 
     except ExceptionGroup as group:
         root_exc = get_root_exception(group)
-        logging.error(f"Root cause: {type(root_exc).__name__}: {str(root_exc)}")
+        logging.error(
+            f"Root cause: {type(root_exc).__name__}: {str(root_exc)}",
+            exc_info=trace_on_exc,
+        )
     except Exception as e:
         logging.error(e, exc_info=trace_on_exc)
