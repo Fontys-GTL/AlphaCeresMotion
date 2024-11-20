@@ -122,6 +122,8 @@ class Machine(Node):
         self._log.info("Starting model update loop")
         last_update = time.time()
 
+        timeout_warned = False
+
         while True:
             dt = time.time() - last_update
             self.model.step(dt)
@@ -129,7 +131,12 @@ class Machine(Node):
 
             # stop if no new setpoints
             if self._cmd_timer.is_timeout():
+                if not timeout_warned:
+                    self._log.warning("Setpoint timeout, stopping.")
+                    timeout_warned = True
                 self.model.cmd_lr(0, 0)
+            else:
+                timeout_warned = False
 
             await asyncio.sleep(1 / freq)
 
