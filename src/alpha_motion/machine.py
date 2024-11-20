@@ -12,17 +12,43 @@ Copyright (c) 2024 ROX Automation - Jev Kuznetsov
 """
 
 import asyncio
+import os
 import time
+
+from odrive_can.odrive import CanMsg, ODriveCAN
+from odrive_can.tools import UDP_Client
 from roxbot import Node
 from roxbot.models.diff_drive import DiffDriveModel
 
 from alpha_motion.config import MachineConfig, MqttTopics
-from alpha_motion.utils import Timer
 from alpha_motion.drives import Drive
-
+from alpha_motion.utils import Timer
 
 CFG = MachineConfig()
 TOPICS = MqttTopics()
+
+
+udp_client = UDP_Client(
+    host=os.getenv("UDP_DATA_DEST", "localhost")
+)  # udp client for sending data to plotjuggler
+
+
+def feedback_callback(msg: CanMsg, caller: ODriveCAN) -> None:
+    """Position callback, send data as MQTT message"""
+    data = msg.data
+    data["setpoint"] = caller.setpoint
+    data["ts"] = time.time()
+
+    data = {
+        "pos": round(data["Pos_Estimate"], 3),
+        "vel": round(data["Vel_Estimate"], 3),
+        "sp": round(data["setpoint"], 3),
+        "ts": round(data["ts"], 3),
+    }
+
+    msg_out = {f"axis_id_{caller.axis_id}": data}
+
+    udp_client.send(msg_out, add_timestamp=False)
 
 
 class Machine(Node):
@@ -36,7 +62,10 @@ class Machine(Node):
         self.model = DiffDriveModel(CFG.B, CFG.wheel_diameter, CFG.wheel_accel)
 
         self.left_wheel = Drive(CFG.wheel_ids[0], "left_wheel", CFG.wheel_dirs[0])
+        self.left_wheel.odrv.feedback_callback = feedback_callback
+
         self.right_wheel = Drive(CFG.wheel_ids[1], "right_wheel", CFG.wheel_dirs[1])
+        self.right_wheel.odrv.feedback_callback = feedback_callback
 
         self.drives = [self.left_wheel, self.right_wheel]
 
