@@ -22,10 +22,8 @@ if not os.path.exists("/sys/class/net/vcan0") or os.environ.get("CI"):
 
 # tried to use a fixture, but it did not work. so using a context manager
 @asynccontextmanager
-async def odrive_can_context(
-    axis_id: int = 1, channel: str = "vcan0"
-) -> AsyncIterator[ODriveCANMock]:
-    odrv = ODriveCANMock(axis_id=axis_id, channel=channel)
+async def odrive_can_context(axis_id: int = 1) -> AsyncIterator[ODriveCANMock]:
+    odrv = ODriveCANMock(axis_id=axis_id)
     odrv_task = asyncio.create_task(odrv.main())
     await asyncio.sleep(0.2)  # Allow some time for the mock to initialize
     try:
@@ -41,7 +39,7 @@ async def odrive_can_context(
 @pytest.mark.asyncio
 async def test_wheel_drive() -> None:
     """Test steering drive with odrive mock."""
-    async with odrive_can_context(axis_id=2, channel="vcan0"):
+    async with odrive_can_context(axis_id=2):
         drive = Drive(2, direction=1, name="wheel_drive")
         await drive.start()
         await drive.init()
