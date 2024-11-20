@@ -26,11 +26,12 @@ class MotionTester(Node):
 
         while True:
             for curvature in [-1.0, 0.0, 1.0]:
-
                 msg = {"v_linear": v_linear, "curvature": curvature}
                 self._log.info(f"Sending {msg}")
-                await self.mqtt.publish(TOPICS.cmd_vc, msg)
-                await asyncio.sleep(10)
+                for _ in range(100):
+
+                    await self.mqtt.publish(TOPICS.cmd_vc, msg)
+                    await asyncio.sleep(0.1)
 
 
 if __name__ == "__main__":
